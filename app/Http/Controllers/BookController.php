@@ -24,7 +24,7 @@ class BookController extends Controller
      */
     public function create()
     {
-        //
+        return view('books.create');
     }
 
     /**
@@ -32,7 +32,28 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $request->validate([
+            'title' => 'required',
+            'category' => 'required',
+            'description' => 'required|max:500',
+          //  'author' =>'required',
+            //'book_image' => 'file|image|dimensions:width=300,height=400'
+            'book_image' => 'file|image',
+            'publisher_id' => 'required',
+            'authors' =>['required' , 'exists:authors,id']
+        ]);
+
+        $book = Book::create([
+            'title' => $request->title,
+            'category' => $request->category,
+            'description' => $request->description,
+         //   'book_image' => $filename,
+        //    'author' => $request->author,
+            'publisher_id' => $request->publisher_id
+        ]);
+
+        return to_route('books.index');
     }
 
     /**
